@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHotelOps.API", "MiniHotelOps.API\MiniHotelOps.API.csproj", "{663F2BC8-0A5F-40B7-8042-7A7C0E666699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHotelOps.Application", "MiniHotelOps.Application\MiniHotelOps.Application.csproj", "{1B3712D6-D51C-4F08-AD5C-128A0028C35C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHotelOps.Domain", "MiniHotelOps.Domain\MiniHotelOps.Domain.csproj", "{C4D23D15-3175-4324-B797-97AB5A4FC01D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHotelOps.Infrastructure", "MiniHotelOps.Infrastructure\MiniHotelOps.Infrastructure.csproj", "{35DE1D73-43D2-4F17-AEA9-41CFB2BB7F28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{663F2BC8-0A5F-40B7-8042-7A7C0E666699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{663F2BC8-0A5F-40B7-8042-7A7C0E666699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{663F2BC8-0A5F-40B7-8042-7A7C0E666699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{663F2BC8-0A5F-40B7-8042-7A7C0E666699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B3712D6-D51C-4F08-AD5C-128A0028C35C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B3712D6-D51C-4F08-AD5C-128A0028C35C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B3712D6-D51C-4F08-AD5C-128A0028C35C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B3712D6-D51C-4F08-AD5C-128A0028C35C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D23D15-3175-4324-B797-97AB5A4FC01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D23D15-3175-4324-B797-97AB5A4FC01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D23D15-3175-4324-B797-97AB5A4FC01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D23D15-3175-4324-B797-97AB5A4FC01D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35DE1D73-43D2-4F17-AEA9-41CFB2BB7F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35DE1D73-43D2-4F17-AEA9-41CFB2BB7F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35DE1D73-43D2-4F17-AEA9-41CFB2BB7F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35DE1D73-43D2-4F17-AEA9-41CFB2BB7F28}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
