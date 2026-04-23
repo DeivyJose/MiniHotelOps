@@ -9,27 +9,27 @@ namespace MiniHotelOps.API.Controllers;
 [Route("api/[controller]")]
 public class HabitacionesController : ControllerBase
 {
-    private readonly IHabitacionService _habitacionService;
+    private readonly IHabitacionService _service;
 
-    public HabitacionesController(IHabitacionService habitacionService)
+    public HabitacionesController(IHabitacionService service)
     {
-        _habitacionService = habitacionService;
+        _service = service;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var data = await _habitacionService.GetAllAsync();
+        var data = await _service.GetAllAsync();
         return Ok(data);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var data = await _habitacionService.GetByIdAsync(id);
+        var data = await _service.GetByIdAsync(id);
 
         if (data == null)
-            return NotFound();
+            return NotFound("Habitación no encontrada.");
 
         return Ok(data);
     }
@@ -39,7 +39,7 @@ public class HabitacionesController : ControllerBase
     {
         try
         {
-            var result = await _habitacionService.CreateAsync(dto);
+            var result = await _service.CreateAsync(dto);
             return Ok(result);
         }
         catch (Exception ex)
@@ -53,12 +53,12 @@ public class HabitacionesController : ControllerBase
     {
         try
         {
-            var result = await _habitacionService.UpdateAsync(id, dto);
+            var result = await _service.UpdateAsync(id, dto);
 
             if (!result)
-                return NotFound();
+                return NotFound("Habitación no encontrada.");
 
-            return Ok("Habitación actualizada correctamente");
+            return Ok("Habitación actualizada correctamente.");
         }
         catch (Exception ex)
         {
@@ -66,25 +66,25 @@ public class HabitacionesController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var result = await _habitacionService.DeleteAsync(id);
-
-        if (!result)
-            return NotFound();
-
-        return Ok("Habitación eliminada correctamente");
-    }
-
     [HttpPatch("{id}/estado")]
     public async Task<IActionResult> CambiarEstado(int id, [FromQuery] EstadoHabitacion estado)
     {
-        var result = await _habitacionService.CambiarEstadoAsync(id, estado);
+        var result = await _service.CambiarEstadoAsync(id, estado);
 
         if (!result)
-            return NotFound();
+            return NotFound("Habitación no encontrada.");
 
-        return Ok("Estado actualizado correctamente");
+        return Ok("Estado actualizado correctamente.");
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+
+        if (!result)
+            return NotFound("Habitación no encontrada.");
+
+        return Ok("Habitación eliminada correctamente.");
     }
 }

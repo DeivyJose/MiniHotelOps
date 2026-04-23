@@ -1,63 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Reservas</title>
+    <meta charset="UTF-8">
+    <title>Reservas - MiniHotelOps</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <header>
-    <h2>Reservas</h2>
+    <h2>Gestión de Reservas</h2>
+    <p>Creación de reservas con validación de disponibilidad</p>
 </header>
 
+<nav>
+    <a href="index.html"><button>Inicio</button></a>
+    <a href="dashboard.html"><button>Dashboard</button></a>
+    <a href="habitaciones.html"><button>Habitaciones</button></a>
+    <a href="huespedes.html"><button>Huéspedes</button></a>
+    <a href="servicios.html"><button>Servicios</button></a>
+</nav>
+
 <div class="container">
-
     <div class="card">
-        <h3>Crear Reserva</h3>
-
-        <input id="huespedId" placeholder="ID Huésped">
-        <input id="habitacionId" placeholder="ID Habitación">
-        <input id="fechaEntrada" type="date">
-        <input id="fechaSalida" type="date">
-        <input id="personas" placeholder="Cantidad Personas">
-
-        <button onclick="crearReserva()">Crear Reserva</button>
-
-        <p id="mensaje"></p>
+        <h3>Nueva Reserva</h3>
+        <div class="form-grid">
+            <input id="huespedId" type="number" placeholder="ID del huésped">
+            <input id="habitacionId" type="number" placeholder="ID de habitación">
+            <input id="fechaEntrada" type="date">
+            <input id="fechaSalida" type="date">
+            <input id="cantidadPersonas" type="number" placeholder="Cantidad de personas">
+        </div>
+        <br>
+        <button onclick="crearReserva()">Crear reserva</button>
+        <p id="mensaje" class="message"></p>
     </div>
 
+    <div class="card">
+        <h3>Ayuda rápida</h3>
+        <p>Primero crea un huésped y una habitación. Luego usa sus IDs para crear la reserva.</p>
+        <p>El sistema valida fechas, capacidad y disponibilidad.</p>
+    </div>
 </div>
 
+<script src="js/app.js"></script>
 <script>
-const API = "http://localhost:5000/api";
-
 async function crearReserva() {
+    try {
+        const data = {
+            huespedId: parseInt(getValue("huespedId")),
+            habitacionId: parseInt(getValue("habitacionId")),
+            fechaEntrada: getValue("fechaEntrada"),
+            fechaSalida: getValue("fechaSalida"),
+            cantidadPersonas: parseInt(getValue("cantidadPersonas"))
+        };
 
-    const data = {
-        huespedId: parseInt(document.getElementById("huespedId").value),
-        habitacionId: parseInt(document.getElementById("habitacionId").value),
-        fechaEntrada: document.getElementById("fechaEntrada").value,
-        fechaSalida: document.getElementById("fechaSalida").value,
-        cantidadPersonas: parseInt(document.getElementById("personas").value)
-    };
+        await request("/Reservas", {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
 
-    const res = await fetch(`${API}/Reservas`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
-
-    const mensaje = document.getElementById("mensaje");
-
-    if (res.ok) {
-        mensaje.innerText = "Reserva creada correctamente";
-        mensaje.style.color = "green";
-    } else {
-        const error = await res.text();
-        mensaje.innerText = error;
-        mensaje.style.color = "red";
+        clearInputs(["huespedId", "habitacionId", "fechaEntrada", "fechaSalida", "cantidadPersonas"]);
+        showMessage("mensaje", "Reserva creada correctamente.", "success");
+    } catch (error) {
+        showMessage("mensaje", error.message, "error");
     }
 }
 </script>

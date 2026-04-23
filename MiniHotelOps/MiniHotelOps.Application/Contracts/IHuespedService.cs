@@ -6,4 +6,5 @@ public interface IHuespedService
 {
     Task<List<HuespedResponseDto>> GetAllAsync();
     Task<HuespedResponseDto> CreateAsync(HuespedCreateDto dto);
+    Task<bool> DeleteAsync(int id);
 }

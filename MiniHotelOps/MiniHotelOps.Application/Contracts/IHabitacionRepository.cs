@@ -4,5 +4,5 @@ namespace MiniHotelOps.Application.Contracts;
 
 public interface IHabitacionRepository : IGenericRepository<Habitacion>
 {
-    Task<Habitacion> GetByNumeroAsync(string numero);
+    Task<Habitacion?> GetByNumeroAsync(string numero);
 }

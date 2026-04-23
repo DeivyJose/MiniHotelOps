@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - MiniHotelOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <h2>Dashboard</h2>
+    <p>Resumen general del sistema</p>
+</header>
+
+<nav>
+    <a href="index.html"><button>Inicio</button></a>
+    <a href="habitaciones.html"><button>Habitaciones</button></a>
+    <a href="huespedes.html"><button>Huéspedes</button></a>
+    <a href="servicios.html"><button>Servicios</button></a>
+    <a href="reservas.html"><button>Reservas</button></a>
+</nav>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <h3>Habitaciones</h3>
+            <div class="stat" id="totalHabitaciones">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Huéspedes</h3>
+            <div class="stat" id="totalHuespedes">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Servicios</h3>
+            <div class="stat" id="totalServicios">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Reservas</h3>
+            <div class="stat" id="totalReservas">N/A</div>
+        </div>
+    </div>
+
+    <p id="mensaje" class="message"></p>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+async function cargarDashboard() {
+    try {
+        const habitaciones = await request("/Habitaciones");
+        const huespedes = await request("/Huespedes");
+        const servicios = await request("/Servicios");
+
+        document.getElementById("totalHabitaciones").textContent = habitaciones.length;
+        document.getElementById("totalHuespedes").textContent = huespedes.length;
+        document.getElementById("totalServicios").textContent = servicios.length;
+
+        try {
+            const reservas = await request("/Reservas");
+            document.getElementById("totalReservas").textContent = reservas.length;
+        } catch {
+            document.getElementById("totalReservas").textContent = "N/A";
+        }
+    } catch (error) {
+        showMessage("mensaje", "No se pudo conectar con la API. Verifica que el backend esté corriendo.", "error");
+    }
+}
+
+cargarDashboard();
+</script>
+
+</body>
+</html>

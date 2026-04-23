@@ -7,16 +7,16 @@ namespace MiniHotelOps.Application.Services;
 
 public class HabitacionService : IHabitacionService
 {
-    private readonly IHabitacionRepository _habitacionRepository;
+    private readonly IHabitacionRepository _repository;
 
-    public HabitacionService(IHabitacionRepository habitacionRepository)
+    public HabitacionService(IHabitacionRepository repository)
     {
-        _habitacionRepository = habitacionRepository;
+        _repository = repository;
     }
 
     public async Task<List<HabitacionResponseDto>> GetAllAsync()
     {
-        var habitaciones = await _habitacionRepository.GetAllAsync();
+        var habitaciones = await _repository.GetAllAsync();
 
         return habitaciones.Select(h => new HabitacionResponseDto
         {
@@ -30,22 +30,22 @@ public class HabitacionService : IHabitacionService
         }).ToList();
     }
 
-    public async Task<HabitacionResponseDto> GetByIdAsync(int id)
+    public async Task<HabitacionResponseDto?> GetByIdAsync(int id)
     {
-        var habitacion = await _habitacionRepository.GetByIdAsync(id);
+        var h = await _repository.GetByIdAsync(id);
 
-        if (habitacion == null)
+        if (h == null)
             return null;
 
         return new HabitacionResponseDto
         {
-            Id = habitacion.Id,
-            Numero = habitacion.Numero,
-            Tipo = habitacion.Tipo,
-            Capacidad = habitacion.Capacidad,
-            PrecioPorNoche = habitacion.PrecioPorNoche,
-            Estado = habitacion.Estado.ToString(),
-            Descripcion = habitacion.Descripcion
+            Id = h.Id,
+            Numero = h.Numero,
+            Tipo = h.Tipo,
+            Capacidad = h.Capacidad,
+            PrecioPorNoche = h.PrecioPorNoche,
+            Estado = h.Estado.ToString(),
+            Descripcion = h.Descripcion
         };
     }
 
@@ -63,15 +63,15 @@ public class HabitacionService : IHabitacionService
         if (dto.PrecioPorNoche <= 0)
             throw new Exception("El precio por noche debe ser mayor que cero.");
 
-        var existente = await _habitacionRepository.GetByNumeroAsync(dto.Numero);
+        var existe = await _repository.GetByNumeroAsync(dto.Numero);
 
-        if (existente != null)
+        if (existe != null)
             throw new Exception("Ya existe una habitación con ese número.");
 
         var habitacion = new Habitacion(dto.Numero, dto.Tipo, dto.Capacidad, dto.PrecioPorNoche, dto.Descripcion);
 
-        await _habitacionRepository.AddAsync(habitacion);
-        await _habitacionRepository.SaveAsync();
+        await _repository.AddAsync(habitacion);
+        await _repository.SaveAsync();
 
         return new HabitacionResponseDto
         {
@@ -87,27 +87,10 @@ public class HabitacionService : IHabitacionService
 
     public async Task<bool> UpdateAsync(int id, HabitacionUpdateDto dto)
     {
-        var habitacion = await _habitacionRepository.GetByIdAsync(id);
+        var habitacion = await _repository.GetByIdAsync(id);
 
         if (habitacion == null)
             return false;
-
-        if (string.IsNullOrWhiteSpace(dto.Numero))
-            throw new Exception("El número de habitación es obligatorio.");
-
-        if (string.IsNullOrWhiteSpace(dto.Tipo))
-            throw new Exception("El tipo de habitación es obligatorio.");
-
-        if (dto.Capacidad <= 0)
-            throw new Exception("La capacidad debe ser mayor que cero.");
-
-        if (dto.PrecioPorNoche <= 0)
-            throw new Exception("El precio por noche debe ser mayor que cero.");
-
-        var existente = await _habitacionRepository.GetByNumeroAsync(dto.Numero);
-
-        if (existente != null && existente.Id != id)
-            throw new Exception("Ya existe otra habitación con ese número.");
 
         habitacion.Numero = dto.Numero;
         habitacion.Tipo = dto.Tipo;
@@ -115,36 +98,36 @@ public class HabitacionService : IHabitacionService
         habitacion.PrecioPorNoche = dto.PrecioPorNoche;
         habitacion.Descripcion = dto.Descripcion;
 
-        _habitacionRepository.Update(habitacion);
-        await _habitacionRepository.SaveAsync();
+        _repository.Update(habitacion);
+        await _repository.SaveAsync();
 
         return true;
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var habitacion = await _habitacionRepository.GetByIdAsync(id);
+        var habitacion = await _repository.GetByIdAsync(id);
 
         if (habitacion == null)
             return false;
 
-        _habitacionRepository.Delete(habitacion);
-        await _habitacionRepository.SaveAsync();
+        _repository.Delete(habitacion);
+        await _repository.SaveAsync();
 
         return true;
     }
 
     public async Task<bool> CambiarEstadoAsync(int id, EstadoHabitacion nuevoEstado)
     {
-        var habitacion = await _habitacionRepository.GetByIdAsync(id);
+        var habitacion = await _repository.GetByIdAsync(id);
 
         if (habitacion == null)
             return false;
 
         habitacion.CambiarEstado(nuevoEstado);
 
-        _habitacionRepository.Update(habitacion);
-        await _habitacionRepository.SaveAsync();
+        _repository.Update(habitacion);
+        await _repository.SaveAsync();
 
         return true;
     }

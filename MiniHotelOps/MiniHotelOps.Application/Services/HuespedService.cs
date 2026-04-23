@@ -30,10 +30,15 @@ public class HuespedService : IHuespedService
     public async Task<HuespedResponseDto> CreateAsync(HuespedCreateDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Nombre))
-            throw new Exception("Nombre requerido");
+            throw new Exception("El nombre es obligatorio.");
+
+        if (string.IsNullOrWhiteSpace(dto.Apellido))
+            throw new Exception("El apellido es obligatorio.");
 
         if (string.IsNullOrWhiteSpace(dto.Documento))
-            throw new Exception("Documento requerido");
+            throw new Exception("El documento es obligatorio.");
+
+        var fecha = dto.FechaNacimiento ?? DateTime.Now;
 
         var entity = new Huesped(
             dto.Nombre,
@@ -42,7 +47,7 @@ public class HuespedService : IHuespedService
             dto.Telefono,
             dto.Email,
             dto.Direccion,
-            dto.FechaNacimiento
+            fecha
         );
 
         await _repository.AddAsync(entity);
@@ -56,5 +61,18 @@ public class HuespedService : IHuespedService
             Telefono = entity.Telefono,
             Email = entity.Email
         };
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var huesped = await _repository.GetByIdAsync(id);
+
+        if (huesped == null)
+            return false;
+
+        _repository.Delete(huesped);
+        await _repository.SaveAsync();
+
+        return true;
     }
 }

@@ -35,4 +35,15 @@ public class HuespedesController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+
+        if (!result)
+            return NotFound("Huésped no encontrado.");
+
+        return Ok("Huésped eliminado correctamente.");
+    }
 }

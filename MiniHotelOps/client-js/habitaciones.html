@@ -1,72 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Habitaciones</title>
+    <meta charset="UTF-8">
+    <title>Habitaciones - MiniHotelOps</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <header>
-    <h2>Habitaciones</h2>
+    <h2>Gestión de Habitaciones</h2>
+    <p>Registro y control de habitaciones del hotel</p>
 </header>
 
+<nav>
+    <a href="index.html"><button>Inicio</button></a>
+    <a href="dashboard.html"><button>Dashboard</button></a>
+    <a href="huespedes.html"><button>Huéspedes</button></a>
+    <a href="servicios.html"><button>Servicios</button></a>
+    <a href="reservas.html"><button>Reservas</button></a>
+</nav>
+
 <div class="container">
-
     <div class="card">
-        <h3>Crear Habitación</h3>
-        <input id="numero" placeholder="Número">
-        <input id="tipo" placeholder="Tipo">
-        <input id="capacidad" placeholder="Capacidad">
-        <input id="precio" placeholder="Precio">
-        <input id="descripcion" placeholder="Descripción">
-        <button onclick="crear()">Crear</button>
+        <h3>Nueva Habitación</h3>
+        <div class="form-grid">
+            <input id="numero" placeholder="Número de habitación">
+            <input id="tipo" placeholder="Tipo">
+            <input id="capacidad" type="number" placeholder="Capacidad">
+            <input id="precioPorNoche" type="number" step="0.01" placeholder="Precio por noche">
+            <input id="descripcion" placeholder="Descripción">
+        </div>
+        <br>
+        <button onclick="crearHabitacion()">Guardar habitación</button>
+        <p id="mensaje" class="message"></p>
     </div>
 
     <div class="card">
-        <h3>Lista</h3>
-        <div id="lista"></div>
+        <h3>Habitaciones Registradas</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número</th>
+                        <th>Tipo</th>
+                        <th>Capacidad</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaHabitaciones"></tbody>
+            </table>
+        </div>
     </div>
-
 </div>
 
+<script src="js/app.js"></script>
 <script>
-const API = "http://localhost:5000/api";
+async function cargarHabitaciones() {
+    try {
+        const habitaciones = await request("/Habitaciones");
+        const tabla = document.getElementById("tablaHabitaciones");
 
-async function cargar() {
-    const res = await fetch(`${API}/Habitaciones`);
-    const data = await res.json();
+        tabla.innerHTML = "";
 
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
-
-    data.forEach(h => {
-        lista.innerHTML += `
-            <div>
-                ${h.numero} - ${h.tipo} - ${h.estado}
-            </div>
-        `;
-    });
+        habitaciones.forEach(h => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${h.id}</td>
+                    <td>${h.numero}</td>
+                    <td>${h.tipo}</td>
+                    <td>${h.capacidad}</td>
+                    <td>$${h.precioPorNoche}</td>
+                    <td><span class="badge">${h.estado}</span></td>
+                    <td>${h.descripcion}</td>
+                    <td>
+                        <button class="btn-danger" onclick="eliminarHabitacion(${h.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        showMessage("mensaje", error.message, "error");
+    }
 }
 
-async function crear() {
-    const body = {
-        numero: document.getElementById("numero").value,
-        tipo: document.getElementById("tipo").value,
-        capacidad: parseInt(document.getElementById("capacidad").value),
-        precioPorNoche: parseFloat(document.getElementById("precio").value),
-        descripcion: document.getElementById("descripcion").value
-    };
+async function crearHabitacion() {
+    try {
+        const data = {
+            numero: getValue("numero"),
+            tipo: getValue("tipo"),
+            capacidad: parseInt(getValue("capacidad")),
+            precioPorNoche: parseFloat(getValue("precioPorNoche")),
+            descripcion: getValue("descripcion")
+        };
 
-    await fetch(`${API}/Habitaciones`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
+        await request("/Habitaciones", {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
 
-    cargar();
+        clearInputs(["numero", "tipo", "capacidad", "precioPorNoche", "descripcion"]);
+        showMessage("mensaje", "Habitación guardada correctamente.", "success");
+        cargarHabitaciones();
+    } catch (error) {
+        showMessage("mensaje", error.message, "error");
+    }
 }
 
-cargar();
+async function eliminarHabitacion(id) {
+    if (!confirm("¿Seguro que quieres eliminar esta habitación?")) return;
+
+    try {
+        await request(`/Habitaciones/${id}`, {
+            method: "DELETE"
+        });
+
+        showMessage("mensaje", "Habitación eliminada correctamente.", "success");
+        cargarHabitaciones();
+    } catch (error) {
+        showMessage("mensaje", error.message, "error");
+    }
+}
+
+cargarHabitaciones();
 </script>
 
 </body>

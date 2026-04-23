@@ -14,9 +14,8 @@ public class HabitacionRepository : GenericRepository<Habitacion>, IHabitacionRe
         _context = context;
     }
 
-    public async Task<Habitacion> GetByNumeroAsync(string numero)
+    public async Task<Habitacion?> GetByNumeroAsync(string numero)
     {
-        return await _context.Habitaciones
-            .FirstOrDefaultAsync(h => h.Numero == numero);
+        return await _context.Habitaciones.FirstOrDefaultAsync(h => h.Numero == numero);
     }
 }

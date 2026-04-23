@@ -6,7 +6,7 @@ namespace MiniHotelOps.Application.Contracts;
 public interface IHabitacionService
 {
     Task<List<HabitacionResponseDto>> GetAllAsync();
-    Task<HabitacionResponseDto> GetByIdAsync(int id);
+    Task<HabitacionResponseDto?> GetByIdAsync(int id);
     Task<HabitacionResponseDto> CreateAsync(HabitacionCreateDto dto);
     Task<bool> UpdateAsync(int id, HabitacionUpdateDto dto);
     Task<bool> DeleteAsync(int id);

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servicios - MiniHotelOps</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <h2>Gestión de Servicios</h2>
+    <p>Servicios internos disponibles para los huéspedes</p>
+</header>
+
+<nav>
+    <a href="index.html"><button>Inicio</button></a>
+    <a href="dashboard.html"><button>Dashboard</button></a>
+    <a href="habitaciones.html"><button>Habitaciones</button></a>
+    <a href="huespedes.html"><button>Huéspedes</button></a>
+    <a href="reservas.html"><button>Reservas</button></a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h3>Nuevo Servicio</h3>
+        <div class="form-grid">
+            <input id="nombre" placeholder="Nombre del servicio">
+            <input id="descripcion" placeholder="Descripción">
+            <input id="precio" type="number" step="0.01" placeholder="Precio">
+        </div>
+        <br>
+        <button onclick="crearServicio()">Guardar servicio</button>
+        <p id="mensaje" class="message"></p>
+    </div>
+
+    <div class="card">
+        <h3>Servicios Registrados</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Servicio</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Disponible</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaServicios"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+async function cargarServicios() {
+    try {
+        const servicios = await request("/Servicios");
+        const tabla = document.getElementById("tablaServicios");
+
+        tabla.innerHTML = "";
+
+        servicios.forEach(s => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.nombre}</td>
+                    <td>${s.descripcion}</td>
+                    <td>$${s.precio}</td>
+                    <td><span class="badge">${s.disponible ? "Sí" : "No"}</span></td>
+                </tr>
+            `;
+        });
+    } catch {
+        showMessage("mensaje", "No se pudieron cargar los servicios.", "error");
+    }
+}
+
+async function crearServicio() {
+    try {
+        const data = {
+            nombre: getValue("nombre"),
+            descripcion: getValue("descripcion"),
+            precio: parseFloat(getValue("precio"))
+        };
+
+        await request("/Servicios", {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
+
+        clearInputs(["nombre", "descripcion", "precio"]);
+        showMessage("mensaje", "Servicio guardado correctamente.", "success");
+        cargarServicios();
+    } catch (error) {
+        showMessage("mensaje", error.message, "error");
+    }
+}
+
+cargarServicios();
+</script>
+
+</body>
+</html>
