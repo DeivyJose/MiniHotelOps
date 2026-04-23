@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservas</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <h2>Reservas</h2>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Crear Reserva</h3>
+
+        <input id="huespedId" placeholder="ID Huésped">
+        <input id="habitacionId" placeholder="ID Habitación">
+        <input id="fechaEntrada" type="date">
+        <input id="fechaSalida" type="date">
+        <input id="personas" placeholder="Cantidad Personas">
+
+        <button onclick="crearReserva()">Crear Reserva</button>
+
+        <p id="mensaje"></p>
+    </div>
+
+</div>
+
+<script>
+const API = "http://localhost:5000/api";
+
+async function crearReserva() {
+
+    const data = {
+        huespedId: parseInt(document.getElementById("huespedId").value),
+        habitacionId: parseInt(document.getElementById("habitacionId").value),
+        fechaEntrada: document.getElementById("fechaEntrada").value,
+        fechaSalida: document.getElementById("fechaSalida").value,
+        cantidadPersonas: parseInt(document.getElementById("personas").value)
+    };
+
+    const res = await fetch(`${API}/Reservas`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const mensaje = document.getElementById("mensaje");
+
+    if (res.ok) {
+        mensaje.innerText = "Reserva creada correctamente";
+        mensaje.style.color = "green";
+    } else {
+        const error = await res.text();
+        mensaje.innerText = error;
+        mensaje.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>

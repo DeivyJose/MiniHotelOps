@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habitaciones</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <h2>Habitaciones</h2>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Crear Habitación</h3>
+        <input id="numero" placeholder="Número">
+        <input id="tipo" placeholder="Tipo">
+        <input id="capacidad" placeholder="Capacidad">
+        <input id="precio" placeholder="Precio">
+        <input id="descripcion" placeholder="Descripción">
+        <button onclick="crear()">Crear</button>
+    </div>
+
+    <div class="card">
+        <h3>Lista</h3>
+        <div id="lista"></div>
+    </div>
+
+</div>
+
+<script>
+const API = "http://localhost:5000/api";
+
+async function cargar() {
+    const res = await fetch(`${API}/Habitaciones`);
+    const data = await res.json();
+
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    data.forEach(h => {
+        lista.innerHTML += `
+            <div>
+                ${h.numero} - ${h.tipo} - ${h.estado}
+            </div>
+        `;
+    });
+}
+
+async function crear() {
+    const body = {
+        numero: document.getElementById("numero").value,
+        tipo: document.getElementById("tipo").value,
+        capacidad: parseInt(document.getElementById("capacidad").value),
+        precioPorNoche: parseFloat(document.getElementById("precio").value),
+        descripcion: document.getElementById("descripcion").value
+    };
+
+    await fetch(`${API}/Habitaciones`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+
+    cargar();
+}
+
+cargar();
+</script>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using MiniHotelOps.Application.Contracts;
+using MiniHotelOps.Application.Services;
 using MiniHotelOps.Infrastructure.Data;
 using MiniHotelOps.Infrastructure.Repositories;
-using MiniHotelOps.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +16,11 @@ builder.Services.AddDbContext<MiniHotelContext>(options =>
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IHabitacionRepository, HabitacionRepository>();
+
 builder.Services.AddScoped<IHabitacionService, HabitacionService>();
 builder.Services.AddScoped<IHuespedService, HuespedService>();
-builder.Services.AddScoped<ReservaService>();
 builder.Services.AddScoped<ServicioService>();
+builder.Services.AddScoped<ReservaService>();
 
 builder.Services.AddCors(options =>
 {
