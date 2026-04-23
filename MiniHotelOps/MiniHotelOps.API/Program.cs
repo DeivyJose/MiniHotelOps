@@ -17,6 +17,9 @@ builder.Services.AddDbContext<MiniHotelContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IHabitacionRepository, HabitacionRepository>();
 builder.Services.AddScoped<IHabitacionService, HabitacionService>();
+builder.Services.AddScoped<IHuespedService, HuespedService>();
+builder.Services.AddScoped<ReservaService>();
+builder.Services.AddScoped<ServicioService>();
 
 builder.Services.AddCors(options =>
 {
